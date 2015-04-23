@@ -1,9 +1,6 @@
 (ns phonecat-re-frame.handlers
-  (:require [ajax.core :as ajax]
+  (:require [ajax.core :refer [GET]]
             [re-frame.core :as re-frame]))
-
-;; -------------------------
-;; Re-frame handlers
 
 (re-frame/register-handler
   :set-image
@@ -24,6 +21,8 @@
   (fn
     ;; log a bad response fetching the phones list
     [app-state [_ response]]
+    (println "Error getting phone list response")
+    (println response)
     app-state))
 
 (re-frame/register-handler
@@ -31,11 +30,11 @@
   (fn
     ;; Fetch the list of phones and process the response
     [app-state _]
-    (ajax/GET "phones/phones.json"
-              {:handler         #(re-frame/dispatch [:process-phones-response %1])
-               :error-handler   #(re-frame/dispatch [:process-phones-bad-response %1])
-               :response-format :json
-               :keywords?       true})
+    (GET "phones/phones.json"
+         {:handler         #(re-frame/dispatch [:process-phones-response %1])
+          :error-handler   #(re-frame/dispatch [:process-phones-bad-response %1])
+          :response-format :json
+          :keywords?       true})
     app-state))
 
 (re-frame/register-handler
@@ -43,11 +42,11 @@
   (fn
     ;; fetch information for the phone with the given phone-id
     [app-state [_ phone-id]]
-    (ajax/GET (str "phones/" phone-id ".json")
-              {:handler         #(re-frame/dispatch [:process-phone-detail-response phone-id %1])
-               :error-handler   #(re-frame/dispatch [:process-phone-detail-bad-response phone-id %1])
-               :response-format :json
-               :keywords?       true})
+    (GET (str "phones/" phone-id ".json")
+         {:handler         #(re-frame/dispatch [:process-phone-detail-response phone-id %1])
+          :error-handler   #(re-frame/dispatch [:process-phone-detail-bad-response phone-id %1])
+          :response-format :json
+          :keywords?       true})
     app-state))
 
 (re-frame/register-handler

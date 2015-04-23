@@ -2,9 +2,6 @@
   (:require [re-frame.core :as re-frame])
   (:require-macros [reagent.ratom :refer [reaction]]))
 
-;; -------------------------
-;; Re-frame subscriptions
-
 (re-frame/register-sub                                      ;; a new subscription handler
   :phones                                                   ;; usage (subscribe [:phones])
   (fn [db]

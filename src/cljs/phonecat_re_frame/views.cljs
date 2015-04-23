@@ -3,7 +3,7 @@
             phonecat-re-frame.handlers
             [reagent.core :as reagent :refer [atom]]
             [re-frame.core :as re-frame])
-  (:require-macros [reagent.ratom  :refer [reaction]]))
+  (:require-macros [reagent.ratom :refer [reaction]]))
 
 ;; -------------------------
 ;; Phone List View
@@ -12,7 +12,7 @@
   "individual phone component in the phoens list view"
   [phone]
   [:li {:class "thumbnail phone-listing"}
-   [:a {:href (str "#/phones/" (:id phone))
+   [:a {:href  (str "#/phones/" (:id phone))
         :class "thumb"}
     [:img {:src (:imageUrl phone)}]]
    [:a {:href (str "#/phones/" (:id phone))} (:name phone)]
@@ -99,8 +99,8 @@
   [phone]
   [:ul {:class "phone-thumbs"}
    (for [image (:images @phone)]
-     ^{:key image} [:li [:img {:src image
-                               :class "phone"
+     ^{:key image} [:li [:img {:src      image
+                               :class    "phone"
                                :on-click #(re-frame/dispatch [:set-image image])}]])])
 
 (defn availability
@@ -114,70 +114,70 @@
 
 (defn battery
   [battery]
-  [phone-info-template "Battery" [{:name "Type"
+  [phone-info-template "Battery" [{:name  "Type"
                                    :value (:type @battery)}
-                                  {:name "Talk Time"
+                                  {:name  "Talk Time"
                                    :value (:talkTime @battery)}
-                                  {:name "Standby time (max)"
+                                  {:name  "Standby time (max)"
                                    :value (:standbyTime @battery)}]])
 
 (defn storage-and-memory
   [storage]
-  [phone-info-template "Storage And Memory"  [{:name "RAM"
-                                               :value (:ram @storage)}
-                                              {:name "Internal Storage"
-                                               :value (:flash @storage)}]])
+  [phone-info-template "Storage And Memory" [{:name  "RAM"
+                                              :value (:ram @storage)}
+                                             {:name  "Internal Storage"
+                                              :value (:flash @storage)}]])
 
 (defn connectivity
   [connectivity]
-  [phone-info-template "Connectivity" [{:name "Network Support"
+  [phone-info-template "Connectivity" [{:name  "Network Support"
                                         :value (:cell @connectivity)}
-                                       {:name "Wifi"
+                                       {:name  "Wifi"
                                         :value (:wifi @connectivity)}
-                                       {:name "Bluetooth"
+                                       {:name  "Bluetooth"
                                         :value (:bluetooth @connectivity)}]])
 
 (defn android
   [android]
-  [phone-info-template "Android" [{:name "OS Version"
+  [phone-info-template "Android" [{:name  "OS Version"
                                    :value (:os @android)}
-                                  {:name "UI"
+                                  {:name  "UI"
                                    :value (:ui @android)}]])
 
 (defn size-and-weight
   [size-and-weight]
-  [phone-info-template "Size And Weight" [{:name "Dimensions"
+  [phone-info-template "Size And Weight" [{:name  "Dimensions"
                                            :value (clojure.string/join ", " (:dimensions @size-and-weight))}
-                                          {:name "Weight"
+                                          {:name  "Weight"
                                            :value (:weight @size-and-weight)}]])
 
 (defn display
   [display]
-  [phone-info-template "Display" [{:name "Screen size"
+  [phone-info-template "Display" [{:name  "Screen size"
                                    :value (:screenSize @display)}
-                                  {:name "Screen resolution"
+                                  {:name  "Screen resolution"
                                    :value (:screenResolution @display)}
-                                  {:name "Touch screen"
+                                  {:name  "Touch screen"
                                    :value (:touchScreen @display)}]])
 
 (defn hardware
   [hardware]
-  [phone-info-template "Hardware" [{:name "CPU"
+  [phone-info-template "Hardware" [{:name  "CPU"
                                     :value (:cpu @hardware)}
-                                   {:name "USB"
+                                   {:name  "USB"
                                     :value (:usb @hardware)}
-                                   {:name "Audio / headphone jack"
+                                   {:name  "Audio / headphone jack"
                                     :value (:audioJack @hardware)}
-                                   {:name "FM Radio"
+                                   {:name  "FM Radio"
                                     :value (:fmRadio @hardware)}
-                                   {:name "Accelerometer"
+                                   {:name  "Accelerometer"
                                     :value (:accelerometer @hardware)}]])
 
 (defn camera
   [camera]
-  [phone-info-template "Camera" [{:name "Primary"
+  [phone-info-template "Camera" [{:name  "Primary"
                                   :value (:primary @camera)}
-                                 {:name "Features"
+                                 {:name  "Features"
                                   :value (clojure.string/join ", " (:features @camera))}]])
 
 (defn additional-features
@@ -208,7 +208,7 @@
         image-url (re-frame/subscribe [:selected-image-url phone-id])]
     (fn []
       [:div
-       [:img {:src @image-url
+       [:img {:src   @image-url
               :class "phone"}]
        [:h1 (:name @phone)]
        [:p (:description @phone)]

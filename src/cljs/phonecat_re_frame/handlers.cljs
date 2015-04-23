@@ -32,10 +32,10 @@
     ;; Fetch the list of phones and process the response
     [app-state _]
     (ajax/GET "phones/phones.json"
-              {:handler #(re-frame/dispatch [:process-phones-response %1])
-               :error-handler #(re-frame/dispatch [:process-phones-bad-response %1])
+              {:handler         #(re-frame/dispatch [:process-phones-response %1])
+               :error-handler   #(re-frame/dispatch [:process-phones-bad-response %1])
                :response-format :json
-               :keywords? true})
+               :keywords?       true})
     app-state))
 
 (re-frame/register-handler
@@ -44,10 +44,10 @@
     ;; fetch information for the phone with the given phone-id
     [app-state [_ phone-id]]
     (ajax/GET (str "phones/" phone-id ".json")
-              {:handler #(re-frame/dispatch [:process-phone-detail-response phone-id %1])
-               :error-handler #(re-frame/dispatch [:process-phone-detail-bad-response phone-id %1])
+              {:handler         #(re-frame/dispatch [:process-phone-detail-response phone-id %1])
+               :error-handler   #(re-frame/dispatch [:process-phone-detail-bad-response phone-id %1])
                :response-format :json
-               :keywords? true})
+               :keywords?       true})
     app-state))
 
 (re-frame/register-handler
@@ -66,25 +66,25 @@
     app-state))
 
 (re-frame/register-handler
-  :initialise-db             ;; usage: (dispatch [:initialise-db])
+  :initialise-db                                            ;; usage: (dispatch [:initialise-db])
   (fn
-    [_ _]                   ;; Ignore both params (db and v).
-    {:phones []
+    [_ _]                                                   ;; Ignore both params (db and v).
+    {:phones        []
      :phone-details {}
-     :search-input ""
-     :order-prop "name"}))
+     :search-input  ""
+     :order-prop    "name"}))
 
 (defn handle-search-input-entered
-      [app-state [_ search-input]]
-      (assoc-in app-state [:search-input] search-input))
+  [app-state [_ search-input]]
+  (assoc-in app-state [:search-input] search-input))
 
 (re-frame/register-handler
   :search-input-entered
   handle-search-input-entered)
 
 (defn handle-order-prop-changed
-      [app-state [_ order-prop]]
-      (assoc-in app-state [:order-prop] order-prop))
+  [app-state [_ order-prop]]
+  (assoc-in app-state [:order-prop] order-prop))
 
 (re-frame/register-handler
   :search-input-entered

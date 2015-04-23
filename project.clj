@@ -9,8 +9,6 @@
             :dependencies [[org.clojure/clojure "1.6.0"]
                            [cljsjs/react "0.12.2-5"]
                            [reagent "0.5.0-alpha3"]
-                           [reagent-forms "0.4.3"]
-                           [reagent-utils "0.1.2"]
                            [secretary "1.2.1"]
                            [org.clojure/clojurescript "0.0-2913" :scope "provided"]
                            [ring "1.3.2"]

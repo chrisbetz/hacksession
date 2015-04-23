@@ -147,7 +147,7 @@
 (defn size-and-weight
   [size-and-weight]
   [phone-info-template "Size And Weight" [{:name "Dimensions"
-                                           :value (:dimensions @size-and-weight)}
+                                           :value (clojure.string/join ", " (:dimensions @size-and-weight))}
                                           {:name "Weight"
                                            :value (:weight @size-and-weight)}]])
 
@@ -198,6 +198,7 @@
    [display (reaction (:display @phone))]
    [hardware (reaction (:hardware @phone))]
    [camera (reaction (:camera @phone))]
+   [size-and-weight (reaction (:sizeAndWeight @phone))]
    [additional-features (reaction (:additionalFeatures @phone))]])
 
 (defn phone-page

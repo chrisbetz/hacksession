@@ -2,7 +2,7 @@
   (:require phonecat-re-frame.subs
             phonecat-re-frame.handlers
             [reagent.core :as reagent :refer [atom]]
-            [re-frame.core :as re-frame])
+            [re-frame.core :refer [subscribe, dispatch]])
   (:require-macros [reagent.ratom :refer [reaction]]))
 
 ;; -------------------------
@@ -30,9 +30,9 @@
 (defn phones-component
   "component for the list of phones"
   []
-  (let [phones (re-frame/subscribe [:phones])
-        search-input (re-frame/subscribe [:search-input])
-        order-prop (re-frame/subscribe [:order-prop])]
+  (let [phones (subscribe [:phones])
+        search-input (subscribe [:search-input])
+        order-prop (subscribe [:order-prop])]
     (fn []
       [:ul {:class "phones"}
        (for [phone (->> @phones
@@ -43,10 +43,9 @@
 (defn search-component
   "component for the search input"
   []
-  (let [search-input (re-frame/subscribe [:search-input])])
   (fn []
     [:div "Search"
-     [:input {:on-change #(re-frame/dispatch [:search-input-entered (-> % .-target .-value)])}]]))
+     [:input {:on-change #(dispatch [:search-input-entered (-> % .-target .-value)])}]]))
 
 (defn mark-selected
   "mark the given select element as selected if the order-prop matches the value of the element passed in"
@@ -58,10 +57,10 @@
 (defn order-by-component
   "component to define how you want to order the phones list"
   []
-  (let [order-prop (re-frame/subscribe [:order-prop])]
+  (let [order-prop (subscribe [:order-prop])]
     (fn []
       [:div "Sort by: "
-       [:select {:on-change #(re-frame/dispatch [:order-prop-changed (-> % .-target .-value)])}
+       [:select {:on-change #(dispatch [:order-prop-changed (-> % .-target .-value)])}
         [:option (mark-selected {:value "name"} @order-prop "name") "Alphabetical"]
         [:option (mark-selected {:value "age"} @order-prop "age") "Newest"]]])))
 
@@ -101,7 +100,7 @@
    (for [image (:images @phone)]
      ^{:key image} [:li [:img {:src      image
                                :class    "phone"
-                               :on-click #(re-frame/dispatch [:set-image image])}]])])
+                               :on-click #(dispatch [:set-image image])}]])])
 
 (defn availability
   [availability]
@@ -204,8 +203,8 @@
 (defn phone-page
   "top level component for the phone page"
   [{phone-id :phone-id}]
-  (let [phone (re-frame/subscribe [:phone-query phone-id])
-        image-url (re-frame/subscribe [:selected-image-url phone-id])]
+  (let [phone (subscribe [:phone-query phone-id])
+        image-url (subscribe [:selected-image-url phone-id])]
     (fn []
       [:div
        [:img {:src   @image-url

@@ -7,9 +7,9 @@
             [environ.core :refer [env]]))
 
 (defroutes routes
-  (GET "/" [] (render-file "templates/index.html" {:dev (env :dev?)}))
-  (resources "/")
-  (not-found "Not Found"))
+           (GET "/" [] (render-file "templates/index.html" {:dev (env :dev?)}))
+           (resources "/")
+           (not-found "Not Found"))
 
 (def app
   (let [handler (wrap-defaults routes site-defaults)]

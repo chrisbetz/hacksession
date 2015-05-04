@@ -2,8 +2,8 @@
   (:require phonecat-re-frame.subs
             phonecat-re-frame.handlers
             [reagent.core :as reagent :refer [atom]]
-            [re-frame.core :as re-frame])
-  (:require-macros [reagent.ratom  :refer [reaction]]))
+            [re-frame.core :refer [subscribe, dispatch]])
+  (:require-macros [reagent.ratom :refer [reaction]]))
 
 ;; -------------------------
 ;; Phone List View
@@ -12,7 +12,7 @@
   "individual phone component in the phoens list view"
   [phone]
   [:li {:class "thumbnail phone-listing"}
-   [:a {:href (str "#/phones/" (:id phone))
+   [:a {:href  (str "#/phones/" (:id phone))
         :class "thumb"}
     [:img {:src (:imageUrl phone)}]]
    [:a {:href (str "#/phones/" (:id phone))} (:name phone)]
@@ -30,9 +30,9 @@
 (defn phones-component
   "component for the list of phones"
   []
-  (let [phones (re-frame/subscribe [:phones])
-        search-input (re-frame/subscribe [:search-input])
-        order-prop (re-frame/subscribe [:order-prop])]
+  (let [phones (subscribe [:phones])
+        search-input (subscribe [:search-input])
+        order-prop (subscribe [:order-prop])]
     (fn []
       [:ul {:class "phones"}
        (for [phone (->> @phones
@@ -43,10 +43,9 @@
 (defn search-component
   "component for the search input"
   []
-  (let [search-input (re-frame/subscribe [:search-input])])
   (fn []
     [:div "Search"
-     [:input {:on-change #(re-frame/dispatch [:search-input-entered (-> % .-target .-value)])}]]))
+     [:input {:on-change #(dispatch [:search-input-entered (-> % .-target .-value)])}]]))
 
 (defn mark-selected
   "mark the given select element as selected if the order-prop matches the value of the element passed in"
@@ -58,10 +57,10 @@
 (defn order-by-component
   "component to define how you want to order the phones list"
   []
-  (let [order-prop (re-frame/subscribe [:order-prop])]
+  (let [order-prop (subscribe [:order-prop])]
     (fn []
       [:div "Sort by: "
-       [:select {:on-change #(re-frame/dispatch [:order-prop-changed (-> % .-target .-value)])}
+       [:select {:on-change #(dispatch [:order-prop-changed (-> % .-target .-value)])}
         [:option (mark-selected {:value "name"} @order-prop "name") "Alphabetical"]
         [:option (mark-selected {:value "age"} @order-prop "age") "Newest"]]])))
 
@@ -99,9 +98,9 @@
   [phone]
   [:ul {:class "phone-thumbs"}
    (for [image (:images @phone)]
-     ^{:key image} [:li [:img {:src image
-                               :class "phone"
-                               :on-click #(re-frame/dispatch [:set-image image])}]])])
+     ^{:key image} [:li [:img {:src      image
+                               :class    "phone"
+                               :on-click #(dispatch [:set-image image])}]])])
 
 (defn availability
   [availability]
@@ -114,70 +113,70 @@
 
 (defn battery
   [battery]
-  [phone-info-template "Battery" [{:name "Type"
+  [phone-info-template "Battery" [{:name  "Type"
                                    :value (:type @battery)}
-                                  {:name "Talk Time"
+                                  {:name  "Talk Time"
                                    :value (:talkTime @battery)}
-                                  {:name "Standby time (max)"
+                                  {:name  "Standby time (max)"
                                    :value (:standbyTime @battery)}]])
 
 (defn storage-and-memory
   [storage]
-  [phone-info-template "Storage And Memory"  [{:name "RAM"
-                                               :value (:ram @storage)}
-                                              {:name "Internal Storage"
-                                               :value (:flash @storage)}]])
+  [phone-info-template "Storage And Memory" [{:name  "RAM"
+                                              :value (:ram @storage)}
+                                             {:name  "Internal Storage"
+                                              :value (:flash @storage)}]])
 
 (defn connectivity
   [connectivity]
-  [phone-info-template "Connectivity" [{:name "Network Support"
+  [phone-info-template "Connectivity" [{:name  "Network Support"
                                         :value (:cell @connectivity)}
-                                       {:name "Wifi"
+                                       {:name  "Wifi"
                                         :value (:wifi @connectivity)}
-                                       {:name "Bluetooth"
+                                       {:name  "Bluetooth"
                                         :value (:bluetooth @connectivity)}]])
 
 (defn android
   [android]
-  [phone-info-template "Android" [{:name "OS Version"
+  [phone-info-template "Android" [{:name  "OS Version"
                                    :value (:os @android)}
-                                  {:name "UI"
+                                  {:name  "UI"
                                    :value (:ui @android)}]])
 
 (defn size-and-weight
   [size-and-weight]
-  [phone-info-template "Size And Weight" [{:name "Dimensions"
+  [phone-info-template "Size And Weight" [{:name  "Dimensions"
                                            :value (clojure.string/join ", " (:dimensions @size-and-weight))}
-                                          {:name "Weight"
+                                          {:name  "Weight"
                                            :value (:weight @size-and-weight)}]])
 
 (defn display
   [display]
-  [phone-info-template "Display" [{:name "Screen size"
+  [phone-info-template "Display" [{:name  "Screen size"
                                    :value (:screenSize @display)}
-                                  {:name "Screen resolution"
+                                  {:name  "Screen resolution"
                                    :value (:screenResolution @display)}
-                                  {:name "Touch screen"
+                                  {:name  "Touch screen"
                                    :value (:touchScreen @display)}]])
 
 (defn hardware
   [hardware]
-  [phone-info-template "Hardware" [{:name "CPU"
+  [phone-info-template "Hardware" [{:name  "CPU"
                                     :value (:cpu @hardware)}
-                                   {:name "USB"
+                                   {:name  "USB"
                                     :value (:usb @hardware)}
-                                   {:name "Audio / headphone jack"
+                                   {:name  "Audio / headphone jack"
                                     :value (:audioJack @hardware)}
-                                   {:name "FM Radio"
+                                   {:name  "FM Radio"
                                     :value (:fmRadio @hardware)}
-                                   {:name "Accelerometer"
+                                   {:name  "Accelerometer"
                                     :value (:accelerometer @hardware)}]])
 
 (defn camera
   [camera]
-  [phone-info-template "Camera" [{:name "Primary"
+  [phone-info-template "Camera" [{:name  "Primary"
                                   :value (:primary @camera)}
-                                 {:name "Features"
+                                 {:name  "Features"
                                   :value (clojure.string/join ", " (:features @camera))}]])
 
 (defn additional-features
@@ -204,11 +203,11 @@
 (defn phone-page
   "top level component for the phone page"
   [{phone-id :phone-id}]
-  (let [phone (re-frame/subscribe [:phone-query phone-id])
-        image-url (re-frame/subscribe [:selected-image-url phone-id])]
+  (let [phone (subscribe [:phone-query phone-id])
+        image-url (subscribe [:selected-image-url phone-id])]
     (fn []
       [:div
-       [:img {:src @image-url
+       [:img {:src   @image-url
               :class "phone"}]
        [:h1 (:name @phone)]
        [:p (:description @phone)]

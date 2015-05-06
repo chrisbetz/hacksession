@@ -79,10 +79,6 @@
   [app-state [_ search-input]]
   (assoc-in app-state [:search-input] search-input))
 
-(register-handler
-  :search-input-entered
-  handle-search-input-entered)
-
 (defn handle-order-prop-changed
   [app-state [_ order-prop]]
   (assoc-in app-state [:order-prop] order-prop))

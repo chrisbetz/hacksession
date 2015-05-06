@@ -7,7 +7,8 @@
             [secretary.core :as secretary :include-macros true]
             [goog.events :as events]
             [goog.history.EventType :as EventType]
-            [re-frame.core :as re-frame])
+            [re-frame.core :as re-frame]
+            [re-frame.undo :as undo])
   (:require-macros [reagent.ratom :refer [reaction]])
   (:import goog.History))
 
@@ -21,6 +22,7 @@
 (secretary/defroute "/phones/:phone-id" {:as params}
                     (session/put! :current-page #'phone-page)
                     (session/put! :params params)
+                    (undo/clear-history!)
                     (re-frame/dispatch [:load-phone-detail (:phone-id params)]))
 
 (defn redirect-to

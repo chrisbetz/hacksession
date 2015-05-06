@@ -1,9 +1,11 @@
 (ns phonecat-re-frame.handlers
   (:require [ajax.core :refer [GET]]
-            [re-frame.core :refer [register-handler, dispatch]]))
+            [re-frame.core :refer [register-handler, dispatch]]
+            [re-frame.middleware :refer [undoable]]))
 
 (register-handler
   :set-image
+  (undoable "Changed picture")
   (fn
     ;; take an image url and set it in the db
     [app-state [_ selected-image-url]]
@@ -31,8 +33,8 @@
     ;; Fetch the list of phones and process the response
     [app-state _]
     (GET "phones/phones.json"
-         {:handler         #(dispatch[:process-phones-response %1])
-          :error-handler   #(dispatch[:process-phones-bad-response %1])
+         {:handler         #(dispatch [:process-phones-response %1])
+          :error-handler   #(dispatch [:process-phones-bad-response %1])
           :response-format :json
           :keywords?       true})
     app-state))
@@ -43,8 +45,8 @@
     ;; fetch information for the phone with the given phone-id
     [app-state [_ phone-id]]
     (GET (str "phones/" phone-id ".json")
-         {:handler         #(dispatch[:process-phone-detail-response phone-id %1])
-          :error-handler   #(dispatch[:process-phone-detail-bad-response phone-id %1])
+         {:handler         #(dispatch [:process-phone-detail-response phone-id %1])
+          :error-handler   #(dispatch [:process-phone-detail-bad-response phone-id %1])
           :response-format :json
           :keywords?       true})
     app-state))

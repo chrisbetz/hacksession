@@ -102,6 +102,13 @@
                                :class    "phone"
                                :on-click #(dispatch [:set-image image])}]])])
 
+(defn undo-button
+  "An undo button that de-selects the previously selected thumbnail"
+  []
+  [:a {:class    "button"
+       :on-click #(dispatch [:undo])}
+   "Undo"])
+
 (defn availability
   [availability]
   [:li
@@ -204,7 +211,8 @@
   "top level component for the phone page"
   [{phone-id :phone-id}]
   (let [phone (subscribe [:phone-query phone-id])
-        image-url (subscribe [:selected-image-url phone-id])]
+        image-url (subscribe [:selected-image-url phone-id])
+        undos? (subscribe [:undos?])]
     (fn []
       [:div
        [:img {:src   @image-url
@@ -212,4 +220,5 @@
        [:h1 (:name @phone)]
        [:p (:description @phone)]
        [thumbnails phone]
+       (when @undos? [undo-button])
        [specs phone]])))

@@ -75,18 +75,12 @@
      :search-input  ""
      :order-prop    "name"}))
 
-(defn handle-search-input-entered
-  [app-state [_ search-input]]
-  (assoc-in app-state [:search-input] search-input))
-
-(defn handle-order-prop-changed
-  [app-state [_ order-prop]]
-  (assoc-in app-state [:order-prop] order-prop))
-
 (register-handler
   :search-input-entered
-  handle-search-input-entered)
+  (fn [app-state [_ search-input]]
+    (assoc-in app-state [:search-input] search-input)))
 
 (register-handler
   :order-prop-changed
-  handle-order-prop-changed)
+  (fn [app-state [_ order-prop]]
+    (assoc-in app-state [:order-prop] order-prop)))

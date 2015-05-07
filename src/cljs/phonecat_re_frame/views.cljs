@@ -87,10 +87,12 @@
     (map (fn [attribute]
            ^{:key (:name attribute)} [:div
                                       [:dt (:name attribute)]
-                                      [:dd (condp = (:value attribute)
-                                             true "\u2713"
-                                             false "\u2718"
-                                             (:value attribute))]])
+                                      [:dd (let [value (:value attribute)]
+                                             (condp #(%1 %2) value
+                                               true? "\u2713"
+                                               false? "\u2718"
+                                               vector? (clojure.string/join ", " value)
+                                               value))]])
          attributes-map)]])
 
 (defn thumbnails
@@ -153,7 +155,7 @@
 (defn size-and-weight
   [size-and-weight]
   [phone-info-template "Size And Weight" [{:name  "Dimensions"
-                                           :value (clojure.string/join ", " (:dimensions @size-and-weight))}
+                                           :value (:dimensions @size-and-weight)}
                                           {:name  "Weight"
                                            :value (:weight @size-and-weight)}]])
 
@@ -184,7 +186,7 @@
   [phone-info-template "Camera" [{:name  "Primary"
                                   :value (:primary @camera)}
                                  {:name  "Features"
-                                  :value (clojure.string/join ", " (:features @camera))}]])
+                                  :value (:features @camera)}]])
 
 (defn additional-features
   [additional-features]

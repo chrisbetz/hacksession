@@ -23,9 +23,9 @@
   [search-input phone]
   (if (= "" search-input)
     true
-    (boolean (or
-               (re-find (re-pattern search-input) (:name phone))
-               (re-find (re-pattern search-input) (:snippet phone))))))
+    (or
+      (re-find (re-pattern search-input) (:name phone))
+      (re-find (re-pattern search-input) (:snippet phone)))))
 
 (defn phones-component
   "component for the list of phones"

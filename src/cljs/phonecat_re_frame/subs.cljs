@@ -29,9 +29,11 @@
       ;; Note how we are sequencing reactions above. Whenever the phone ratom changes the images ratom will change as well
       (reaction
         (if @phone-details
-          (if-let [image-url (:selected-image-url @phone-details)]
-            image-url
-            (first @images)))))))
+          (let [image-url (:selected-image-url @phone-details)]
+            ;; is the selected url from the current phone's images? (it could also belong to a previously selected phone)
+            (if (some #{image-url} @images)
+              image-url
+              (first @images))))))))
 
 (register-sub
   :phone-details

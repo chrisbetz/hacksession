@@ -117,8 +117,7 @@
    [:span "Availability and Networks"]
    [:dl
     [:dt "Availability"]
-    (for [availability @availability]
-      availability)]])
+    (for [availability @availability] availability)]])
 
 (defn battery
   [battery]
@@ -198,7 +197,7 @@
   "component for displaying the specs of the phone"
   [phone]
   [:ul {:class "specs"}
-   [availability (reaction (:availiability @phone))]
+   [availability (reaction (:availability @phone))]
    [battery (reaction (:battery @phone))]
    [storage-and-memory (reaction (:storage @phone))]
    [connectivity (reaction (:connectivity @phone))]

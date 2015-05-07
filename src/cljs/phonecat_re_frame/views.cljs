@@ -88,11 +88,11 @@
            ^{:key (:name attribute)} [:div
                                       [:dt (:name attribute)]
                                       [:dd (let [value (:value attribute)]
-                                             (condp #(%1 %2) value
-                                               true? "\u2713"
-                                               false? "\u2718"
-                                               vector? (clojure.string/join ", " value)
-                                               value))]])
+                                             (cond
+                                               (true? value) "\u2713"
+                                               (false? value) "\u2718"
+                                               (vector? value) (clojure.string/join ", " value)
+                                               :else value))]])
          attributes-map)]])
 
 (defn thumbnails

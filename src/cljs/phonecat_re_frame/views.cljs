@@ -21,11 +21,10 @@
 (defn matches-query?
   "checks if the search input matches a name or snippet of the given phone"
   [search-input phone]
-  (if (= "" search-input)
-    true
-    (or
-      (re-find (re-pattern search-input) (:name phone))
-      (re-find (re-pattern search-input) (:snippet phone)))))
+  (or
+    (= "" search-input)
+    (re-find (re-pattern search-input) (:name phone))
+    (re-find (re-pattern search-input) (:snippet phone))))
 
 (defn phones-component
   "component for the list of phones"

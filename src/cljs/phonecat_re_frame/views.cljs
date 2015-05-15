@@ -3,7 +3,7 @@
             phonecat-re-frame.handlers
             [reagent.core :as reagent :refer [atom]]
             [re-frame.core :refer [subscribe, dispatch]]
-            [re-com.core :refer [button]])
+            [re-com.core :refer [button, h-box, v-box, single-dropdown]])
   (:require-macros [reagent.ratom :refer [reaction]]))
 
 ;; -------------------------
@@ -47,33 +47,28 @@
     [:div "Search"
      [:input {:on-change #(dispatch [:search-input-entered (-> % .-target .-value)])}]]))
 
-(defn mark-selected
-  "mark the given select element as selected if the order-prop matches the value of the element passed in"
-  [props order-prop current-prop-value]
-  (if (= order-prop current-prop-value)
-    (reagent/merge-props props {:selected "selected"})
-    props))
-
 (defn order-by-component
   "component to define how you want to order the phones list"
   []
   (let [order-prop (subscribe [:order-prop])]
     (fn []
-      [:div "Sort by: "
-       [:select {:on-change #(dispatch [:order-prop-changed (-> % .-target .-value)])}
-        [:option (mark-selected {:value "name"} @order-prop "name") "Alphabetical"]
-        [:option (mark-selected {:value "age"} @order-prop "age") "Newest"]]])))
+      [single-dropdown
+       :choices     [{:id "name" :label "Alphabetically"}
+                     {:id "age" :label "Newest"}]
+       :model       @order-prop
+       :placeholder "Sort order"
+       :width       "150px"
+       :on-change   #(dispatch [:order-prop-changed %])])))
 
 (defn home-page
-  "defines the ome page which will be the phone list component"
+  "defines the home page which will be the phone list component"
   []
-  [:div {:class "container-fluid"}
-   [:div {:class "row"}
-    [:div {:class "col-md-2"}
-     [search-component]
-     [order-by-component]]
-    [:div {:class "col-md-10"}
-     [phones-component]]]])
+  [h-box
+   :children [[v-box
+               :children [[search-component]
+                          [order-by-component]]]
+              [v-box
+               :children [[phones-component]]]]])
 
 ;; -------------------------
 ;; Phone details views

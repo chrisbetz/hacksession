@@ -42,26 +42,24 @@
 (defn search-component
   "component for the search input"
   []
-  (fn []
-    [input-text
-     :model ""
-     :width "150px"
-     :placeholder "Search"
-     :on-change #(dispatch [:search-input-entered %])
-     :change-on-blur? false]))
+  [input-text
+   :model ""
+   :width "150px"
+   :placeholder "Search"
+   :on-change #(dispatch [:search-input-entered %])
+   :change-on-blur? false])
 
 (defn order-by-component
   "component to define how you want to order the phones list"
   []
   (let [order-prop (subscribe [:order-prop])]
-    (fn []
-      [single-dropdown
-       :choices [{:id "name" :label "Sort by name"}
-                 {:id "age" :label "Newest first"}]
-       :model @order-prop
-       :placeholder "Sort order"
-       :width "150px"
-       :on-change #(dispatch [:order-prop-changed %])])))
+    [single-dropdown
+     :choices [{:id "name" :label "Sort by name"}
+               {:id "age" :label "Newest first"}]
+     :model @order-prop
+     :placeholder "Sort order"
+     :width "150px"
+     :on-change #(dispatch [:order-prop-changed %])]))
 
 (defn home-page
   "defines the home page which will be the phone list component"
@@ -218,12 +216,11 @@
   (let [phone (subscribe [:phone-query phone-id])
         image-url (subscribe [:selected-image-url phone-id])
         undos? (subscribe [:undos?])]
-    (fn []
-      [:div
-       [:img {:src   @image-url
-              :class "phone"}]
-       [:h1 (:name @phone)]
-       [:p (:description @phone)]
-       [thumbnails phone]
-       [undo-button undos?]
-       [specs phone]])))
+    [:div
+     [:img {:src   @image-url
+            :class "phone"}]
+     [:h1 (:name @phone)]
+     [:p (:description @phone)]
+     [thumbnails phone]
+     [undo-button undos?]
+     [specs phone]]))

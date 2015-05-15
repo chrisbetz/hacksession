@@ -22,11 +22,10 @@
 (defn matches-query?
   "checks if the search input matches a name or snippet of the given phone"
   [search-input phone]
-  (if (= "" search-input)
-    true
-    (boolean (or
-               (re-find (re-pattern search-input) (:name phone))
-               (re-find (re-pattern search-input) (:snippet phone))))))
+  (or
+    (= "" search-input)
+    (re-find (re-pattern search-input) (:name phone))
+    (re-find (re-pattern search-input) (:snippet phone))))
 
 (defn phones-component
   "component for the list of phones"
@@ -89,11 +88,11 @@
            ^{:key (:name attribute)} [:div
                                       [:dt (:name attribute)]
                                       [:dd (let [value (:value attribute)]
-                                             (condp #(%1 %2) value
-                                               true? "\u2713"
-                                               false? "\u2718"
-                                               vector? (clojure.string/join ", " value)
-                                               value))]])
+                                             (cond
+                                               (true? value) "\u2713"
+                                               (false? value) "\u2718"
+                                               (vector? value) (clojure.string/join ", " value)
+                                               :else value))]])
          attributes-map)]])
 
 (defn thumbnails

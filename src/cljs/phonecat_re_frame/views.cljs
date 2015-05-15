@@ -1,9 +1,8 @@
 (ns phonecat-re-frame.views
   (:require phonecat-re-frame.subs
             phonecat-re-frame.handlers
-            [reagent.core :as reagent :refer [atom]]
             [re-frame.core :refer [subscribe, dispatch]]
-            [re-com.core :refer [button, h-box, v-box, single-dropdown]])
+            [re-com.core :refer [button, h-box, v-box, single-dropdown, input-text]])
   (:require-macros [reagent.ratom :refer [reaction]]))
 
 ;; -------------------------
@@ -44,8 +43,12 @@
   "component for the search input"
   []
   (fn []
-    [:div "Search"
-     [:input {:on-change #(dispatch [:search-input-entered (-> % .-target .-value)])}]]))
+    [input-text
+     :model ""
+     :width "150px"
+     :placeholder "Search"
+     :on-change #(dispatch [:search-input-entered %])
+     :change-on-blur? false]))
 
 (defn order-by-component
   "component to define how you want to order the phones list"
@@ -53,18 +56,19 @@
   (let [order-prop (subscribe [:order-prop])]
     (fn []
       [single-dropdown
-       :choices     [{:id "name" :label "Alphabetically"}
-                     {:id "age" :label "Newest"}]
-       :model       @order-prop
+       :choices [{:id "name" :label "Sort by name"}
+                 {:id "age" :label "Newest first"}]
+       :model @order-prop
        :placeholder "Sort order"
-       :width       "150px"
-       :on-change   #(dispatch [:order-prop-changed %])])))
+       :width "150px"
+       :on-change #(dispatch [:order-prop-changed %])])))
 
 (defn home-page
   "defines the home page which will be the phone list component"
   []
   [h-box
    :children [[v-box
+               :gap "10px"
                :children [[search-component]
                           [order-by-component]]]
               [v-box

@@ -2,7 +2,8 @@
   (:require phonecat-re-frame.subs
             phonecat-re-frame.handlers
             [reagent.core :as reagent :refer [atom]]
-            [re-frame.core :refer [subscribe, dispatch]])
+            [re-frame.core :refer [subscribe, dispatch]]
+            [re-com.core :refer [button]])
   (:require-macros [reagent.ratom :refer [reaction]]))
 
 ;; -------------------------
@@ -106,10 +107,15 @@
 
 (defn undo-button
   "An undo button that de-selects the previously selected thumbnail"
-  []
-  [:a {:class    "button"
-       :on-click #(dispatch [:undo])}
-   "Undo"])
+  [undos?]
+  [button
+   :label "Undo Selection"
+   :tooltip "I am not very useful"
+   :tooltip-position :below-center
+   :disabled? (not @undos?)
+   :on-click #(dispatch [:undo])
+   :class "btn-default"]
+  )
 
 (defn availability
   [availability]
@@ -221,5 +227,5 @@
        [:h1 (:name @phone)]
        [:p (:description @phone)]
        [thumbnails phone]
-       (when @undos? [undo-button])
+       [undo-button undos?]
        [specs phone]])))

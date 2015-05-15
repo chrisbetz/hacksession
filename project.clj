@@ -19,6 +19,7 @@
                            [selmer "0.8.0"]
                            [environ "1.0.0"]
                            [re-frame "0.4.0"]
+                           [re-com "0.5.4"]
                            [cljs-ajax "0.3.10"]]
 
             :plugins [
